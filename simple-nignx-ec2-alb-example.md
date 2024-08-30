@@ -18,12 +18,25 @@ An example to create a pair of nginx EC2 instance that services static content w
    1. Stop the EC2 instnace and create a new AMI image from it.
 
 1. Create a pair of EC2 intances from **nginx-seed** image
+   1. Create following files in efs shared drive
+   ```bash
+   sudo mkdir -p /mnt/efs/fs1/site-content/site
+   echo "<h1>Shared content in EFS drive!</h1>" | sudo tee /mnt/efs/fs1/site-content/site/index.html"
+   sudo mkdir -p /mnt/efs/fs1/site-content/conf
+   cat <<EOF | sudo tee /mnt/efs/fs1/conf/efs-shared.conf
+   location /site {
+      root /usr/share/nginx/site-content;
+   }
+   EOF
+   ```
+   
    1. Create the static content
    ```bash
    sudo mkdir -p /usr/share/nginx/html/test
    echo "Hello world from `hostname`!" | sudo tee /usr/share/nginx/test/test.txt
    sudo ln -s /mnt/efs/fs1/site-content /usr/share/nginx/site-content
    sudo ln -s /mnt/efs/fs1/conf/efs-shared.conf /etc/nginx/default.d/efs-shared.conf
+   sudo systemctl restart nginx
    ```
 
 1. Create a new target group
