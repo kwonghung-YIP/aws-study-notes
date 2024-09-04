@@ -1,0 +1,18 @@
+CodeBuild
+
+CodeDeploy
+
+1. EC2
+  1. Assign IAM Role to EC2 instance to allow copy artifact from s3 bucket
+
+```bash
+sudo yum -y update
+sudo yum install available | grep java-21
+sudo yum install -y java-21-amazon-corretto.x86_64
+sudo yum install -y maven-amazon-corretto21.noarch
+java -version
+
+mkdir application
+aws s3 cp s3://hunguk-aws-codebuild-artifact/simple-springboot-webapp/target/simple-springboot-0.0.1-SNAPSHOT.jar ./application
+java -jar ./application/simple-springboot-0.0.1-SNAPSHOT.jar
+```
